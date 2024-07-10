@@ -16,7 +16,7 @@ class PredictiveAnalysis(Page):
 
         st.markdown("# DataFrame Demo")
         st.sidebar.header("DataFrame Demo")
-        st.write(self.data['base'])
+        st.write(self.data['record'])
         st.write(
             """This demo shows how to use `st.write` to visualize Pandas DataFrames.
         (Data courtesy of the [UN Data Explorer](http://data.un.org/Explorer.aspx).)"""

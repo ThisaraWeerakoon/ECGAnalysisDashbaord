@@ -5,6 +5,8 @@ class Page:
     def __init__(self, name, data, **kwargs):
         self.name = name
         self.data = data
+        self.signal= data["record"].p_signal[:, 0]
+
         self.kwargs = kwargs
 
     def content(self):

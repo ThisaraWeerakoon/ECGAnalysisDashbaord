@@ -37,7 +37,7 @@ def main():
     """A streamlit app template"""
 
     # st.sidebar.title("Tools")
-
+    st.set_page_config(layout="wide")
     PAGES = {
         "Descriptive Analysis": DescriptiveAnalysis,
         "PreProcessing": Preprocess,
@@ -50,7 +50,7 @@ def main():
     sidebar_caption()
     option = st.sidebar.selectbox(
         "Select A patient Record",
-        ("100", "101", "102"))
+        ("100", "101", "102", "103", "104", "105", "106"))
 
     data = f"mit-bih-arrhythmia-database-1.0.0/{option}"
 

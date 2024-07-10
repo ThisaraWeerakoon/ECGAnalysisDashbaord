@@ -14,7 +14,7 @@ class Preprocess(Page):
 
         st.markdown("# Mapping Demo")
         st.sidebar.header("Mapping Demo")
-        st.write(self.data['base'])
+        st.write(self.data['record'])
         st.write(
             """This demo shows how to use
         [`st.pydeck_chart`](https://docs.streamlit.io/develop/api-reference/charts/st.pydeck_chart)

@@ -2,6 +2,8 @@
 import numpy as np
 import pandas as pd
 import streamlit as st
+import wfdb
+
 # from loguru import logger
 
 from page.PreProccessing import Preprocess
@@ -46,20 +48,22 @@ def main():
     # Use dropdown if you prefer
     selection = st.sidebar.radio("Tools", list(PAGES.keys()))
     sidebar_caption()
+    option = st.sidebar.selectbox(
+        "Select A patient Record",
+        ("100", "101", "102"))
+
+    data = f"mit-bih-arrhythmia-database-1.0.0/{option}"
+
+    record = wfdb.rdrecord(data, smooth_frames=True)
 
     page = PAGES[selection]
 
-    DATA = {"base": "testttinggggggggg"}
+    DATA = {"record": record}
 
     with st.spinner(f"Loading Page {selection} ..."):
-        if selection == "PreProcessing":
-            print("PreProcessing")
-            DATA={"base": "preprocessing"}
-            page = page(DATA)
-            page()
-        else:
-            page = page(DATA)
-            page()
+
+        page = page(DATA)
+        page()
 
 
 if __name__ == "__main__":

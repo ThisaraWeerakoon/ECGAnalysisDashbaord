@@ -42,6 +42,7 @@ class Preprocess(Page):
         # st.markdown("# Mapping Demo")
         # st.sidebar.header("Mapping Demo")
         # st.write(self.data['record'])
+
         last_rows = self.data["record"].p_signal[:5000, 0]
         with main_col1:
             filtered_placeholder = st.empty()

@@ -37,13 +37,13 @@ class Preprocess(Page):
             "Choose countries", ["Normalization","Baseline Removal","HighPassFilter"],  ["Normalization","Baseline Removal","HighPassFilter"]
         )
 
-        last_rows = self.data["record"].p_signal[:1000, 0]
+        last_rows = self.data["record"].p_signal[:2000, 0]
         filtered_placeholder.line_chart(last_rows)
 
 
 
         if "HighPassFilter" in options:
-            last_rows = self.band_pass_filter(self.data["record"].p_signal[:1000, 0], cutoff=[0.5, 50], fs=360, btype='band')
+            last_rows = self.band_pass_filter(self.data["record"].p_signal[:2000, 0], cutoff=[0.5, 50], fs=360, btype='band')
 
         if "Normalization" in options:
             # st.sidebar.progress(0)
@@ -60,5 +60,7 @@ class Preprocess(Page):
         # def update_filtered_plot(lowcut, highcut):
         #     filtered_signal = apply_bandpass_filter(signal_data, lowcut, highcut, fs)
         #     filtered_placeholder.line_chart(filtered_signal, use_container_width=True)
+
+
 
 

@@ -2,6 +2,7 @@ import streamlit as st
 from page.PreProccessing import Preprocess
 import wfdb
 import pandas as pd
+from electroCardioGuard.PersonIdentification import PersonIdentification
 from page.Descriptive_Analysis import DescriptiveAnalysis
 from page.Predictive_Analysis import PredictiveAnalysis
 
@@ -65,5 +66,5 @@ with tab4:
 
 with tab5:
     DATA = {"record": record, "signal": signal,'saved_signals': st.session_state.saved_signals}
-    page = PredictiveAnalysis(DATA)
+    page = PersonIdentification(DATA)
     page.content()

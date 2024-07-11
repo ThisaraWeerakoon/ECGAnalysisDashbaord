@@ -34,64 +34,6 @@ class DescriptiveAnalysis(Page):
         add_peak_trace('ECG_R_Peaks', 'blue', 'R Peaks')
         add_peak_trace('ECG_S_Peaks', 'purple', 'S Peaks')
         add_peak_trace('ECG_T_Peaks', 'orange', 'T Peaks')
-<<<<<<< HEAD
-
-
-        fig.update_layout(
-            title='ECG Signal with Peaks',
-            xaxis_title='Sample',
-            yaxis_title='Amplitude',
-            xaxis=dict(
-                rangeslider=dict(
-                    visible=True,
-                    thickness=0.07
-                ),
-                type='linear'
-            ),
-            yaxis=dict(
-                fixedrange=True
-            ),
-            width=800,  
-            height=700 
-        )
-    
-        st.plotly_chart(fig, use_container_width=True)
-
-        total1, total2, total3 = st.columns(3, gap='medium')
-
-        with total1:
-            if 'ECG_R_Peaks' in info:
-                num_beats = len(info['ECG_R_Peaks'])
-                duration_minutes = len(last_rows) / 360 / 60  
-                heart_rate = num_beats / duration_minutes
-                st.metric(label="Heart Rate (bpm)", value=f"{heart_rate:.2f}")
-
-        with total2:
-            if num_beats > 1:
-                qrs_intervals = np.diff(info['ECG_R_Peaks'])
-                average_qrs_interval = np.mean(qrs_intervals)
-                st.metric(label="Average QRS Interval (ms)", value=f"{average_qrs_interval:.2f}")
-            else:
-                st.warning("Not enough data to calculate QRS interval.")
-
-        with total3:
-            if 'ECG_R_Peaks' in info:
-                r_peaks = info['ECG_R_Peaks']
-                rr_intervals = np.diff(r_peaks)  
-                rr_std = np.std(rr_intervals)
-                threshold = 0.1
-                if rr_std < threshold:  
-                    rhythm_regularity = "Regular"
-                else:
-                    rhythm_regularity = "Irregular"
-                st.metric(label="Rhythm Regularity", value=rhythm_regularity)
-
-
-
-        style_metric_cards(background_color="white", border_left_color="#89CFF0", border_color="#89CFF0",
-                          box_shadow="#F71938")
-
-=======
 
 
         fig.update_layout(
@@ -149,4 +91,3 @@ class DescriptiveAnalysis(Page):
                           box_shadow="#F71938")
 
 
->>>>>>> 0c3b8a902d886d2bef2058ffccfc2b957eafb648

@@ -43,26 +43,13 @@ class Preprocess(Page):
         # st.sidebar.header("Mapping Demo")
         # st.write(self.data['record'])
 
-<<<<<<< HEAD
-        options = st.multiselect(
-            "Choose countries", ["Normalization","Baseline Removal","HighPassFilter"],  ["Normalization","Baseline Removal","HighPassFilter"]
-        )
-
-        last_rows = self.data["record"].p_signal[:2000, 0]
-        filtered_placeholder.line_chart(last_rows)
-=======
         last_rows = self.data["record"].p_signal[:5000, 0]
         with main_col1:
             filtered_placeholder = st.empty()
->>>>>>> 0c3b8a902d886d2bef2058ffccfc2b957eafb648
 
 
             # st.write( self.data["record"].p_signal.shape)
 
-<<<<<<< HEAD
-        if "HighPassFilter" in options:
-            last_rows = self.band_pass_filter(self.data["record"].p_signal[:2000, 0], cutoff=[0.5, 50], fs=360, btype='band')
-=======
             fs = 360
             t = np.linspace(0, 5000/360, 5000)  # Time vector of 1 second
             # print(t)
@@ -87,7 +74,6 @@ class Preprocess(Page):
                     0, 100, 25)
                 st.write("Frequency band: 0", values)
                 last_rows = self.lowpass_filter(self.data["record"].p_signal[:5000, 0], cutoff=values, fs=360)
->>>>>>> 0c3b8a902d886d2bef2058ffccfc2b957eafb648
 
 
                 # You can call any Streamlit command, including custom components:

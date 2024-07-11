@@ -6,7 +6,7 @@ from page.Descriptive_Analysis import DescriptiveAnalysis
 from page.Predictive_Analysis import PredictiveAnalysis
 
 st.set_page_config(layout="wide")
-tab1, tab2, tab3 = st.tabs(["📈 Preprocessing", "🗃 Descriptive Analysis", "📊 Predictive Analysis"])
+tab1, tab2, tab3 ,tab4,tab5= st.tabs(["📈 Preprocessing", "🗃 Descriptive Analysis", "📊Arrhythmia Detection","📊Mycardioc Infarction Detection", "📊Person Identification"])
 
 # Initialize saved_signals in session state if not already present
 if 'saved_signals' not in st.session_state:
@@ -54,6 +54,16 @@ with tab2:
 
 
 with tab3:
+    DATA = {"record": record, "signal": signal,'saved_signals': st.session_state.saved_signals}
+    # page = PredictiveAnalysis(DATA)
+    # page.content()
+
+with tab4:
+    DATA = {"record": record, "signal": signal,'saved_signals': st.session_state.saved_signals}
+    # page = PredictiveAnalysis(DATA)
+    # page.content()
+
+with tab5:
     DATA = {"record": record, "signal": signal,'saved_signals': st.session_state.saved_signals}
     page = PredictiveAnalysis(DATA)
     page.content()

@@ -53,7 +53,6 @@ class DescriptiveAnalysis(Page):
 
 
         fig.update_layout(
-            title='ECG Signal with Peaks',
             xaxis_title='Sample',
             yaxis_title='Amplitude',
             xaxis=dict(
@@ -69,7 +68,9 @@ class DescriptiveAnalysis(Page):
             width=800,  
             height=700 
         )
-    
+
+        style_metric_cards(background_color="white", border_left_color="#89CFF0", border_color="#89CFF0",
+                          box_shadow="#F71938")
         st.plotly_chart(fig, use_container_width=True)
 
         total1, total2, total3 = st.columns(3, gap='medium')
@@ -100,10 +101,9 @@ class DescriptiveAnalysis(Page):
                 else:
                     rhythm_regularity = "Irregular"
                 st.metric(label="Rhythm Regularity", value=rhythm_regularity)
-
+                style_metric_cards(background_color="white", border_left_color="#89CFF0", border_color="#89CFF0",
+                          box_shadow="#F71938")
 
 
         style_metric_cards(background_color="white", border_left_color="#89CFF0", border_color="#89CFF0",
                           box_shadow="#F71938")
-
-

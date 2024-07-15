@@ -1,11 +1,9 @@
 import sys
 
-import matplotlib.pyplot as plt
 import torch
 import torch.nn as nn
 import torchvision.ops
 from torch.nn.utils import weight_norm
-from tqdm import tqdm
 
 from models.pt_preprocess_module import Preprocessing
 
@@ -146,7 +144,6 @@ class CDIL(nn.Module):
 
 if __name__ == "__main__":
     from h5_pt_dataloader import ECGDataModule
-    from time import perf_counter_ns
 
     dm = ECGDataModule('../HDF5_DATA', 2)
     model = CDIL(normalize=True, remove_baseline=True, remove_hf_noise=True)

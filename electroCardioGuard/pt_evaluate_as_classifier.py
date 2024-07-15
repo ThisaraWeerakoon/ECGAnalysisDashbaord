@@ -1,9 +1,6 @@
 import argparse
-from time import sleep
 import pandas as pd
 import torch
-import numpy as np
-import matplotlib.pyplot as plt
 from models.pt_classifier import Classifier
 
 

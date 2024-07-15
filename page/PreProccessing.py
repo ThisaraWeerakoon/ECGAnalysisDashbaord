@@ -43,7 +43,7 @@ class Preprocess(Page):
         # st.sidebar.header("Mapping Demo")
         # st.write(self.data['record'])
 
-        last_rows = self.data["record"].p_signal[:5000, 0]
+        last_rows = self.data["record"].p_signal[:4096, self.data["channel"]]
         with main_col1:
             filtered_placeholder = st.empty()
 
@@ -51,7 +51,7 @@ class Preprocess(Page):
             # st.write( self.data["record"].p_signal.shape)
 
             fs = 360
-            t = np.linspace(0, 5000/360, 5000)  # Time vector of 1 second
+            t = np.linspace(0, 4096/360, 4096)  # Time vector of 1 second
             # print(t)
             # print(len(ecg_signal))
             power_line_frequency = 50  # Power line frequency (Hz)
@@ -73,7 +73,7 @@ class Preprocess(Page):
                     "Select a band of Frequncy Hz ",
                     0, 100, 25)
                 st.write("Frequency band: 0", values)
-                last_rows = self.lowpass_filter(self.data["record"].p_signal[:5000, 0], cutoff=values, fs=360)
+                last_rows = self.lowpass_filter(self.data["record"].p_signal[:4096, self.data["channel"]], cutoff=values, fs=360)
 
 
                 # You can call any Streamlit command, including custom components:
@@ -86,14 +86,14 @@ class Preprocess(Page):
                 # st.write("Notch  Filter")
 
                 number = st.number_input("Set Notch frequency" ,50)
-                print(number)
+                # print(number)
 
                 last_rows = self.notch_filter(last_rows, cutoff=int(number), fs=360)
 
 
             if "Normalization" in options:
                 # st.sidebar.progress(0)
-                print("Normalization")
+                # print("Normalization")
                 scaler = MinMaxScaler()
                 last_rows = scaler.fit_transform(last_rows.reshape(-1, 1))
                 # st.write("This is inside the container")

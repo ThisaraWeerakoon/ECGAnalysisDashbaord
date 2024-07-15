@@ -1,4 +1,4 @@
-from models.pt_classifier import Classifier
+# from models.pt_classifier import Classifier
 from utils.page import Page
 import matplotlib.pyplot as plt
 import torch
@@ -16,7 +16,7 @@ def plot_ecg(signal, title):
     st.pyplot(plt)
 
 
-class PredictiveAnalysis(Page):
+class PersonIdentification(Page):
     def __init__(self, data, **kwargs):
         name = "About"
         super().__init__(name, data, **kwargs)
@@ -98,9 +98,9 @@ class PredictiveAnalysis(Page):
             # Stack the tensors along a new axis to get shape (2, 4096, 12)
             combined_tensor = torch.stack((tensor1, tensor2))
 
-            embedder = torch.load("best_model/best_embedding")
-            discriminator = torch.load("best_model/best_discriminator")
-            c = Classifier(embedder, discriminator, "a3")
+            embedder = torch.load("electroCardioGuard/best_model/best_embedding")
+            discriminator = torch.load("electroCardioGuard/best_model/best_discriminator")
+            # c = Classifier(embedder, discriminator, "a3")
             torch.manual_seed(7)
             embeedings=embedder(combined_tensor.transpose(-1, -2))
             print(embeedings[0].shape)

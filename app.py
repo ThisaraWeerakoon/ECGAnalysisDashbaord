@@ -1,13 +1,10 @@
 import streamlit as st
 from page.PreProccessing import Preprocess
-import torch
 import wfdb
 import pandas as pd
 from electroCardioGuard.PersonIdentification import PersonIdentification
 from page.Descriptive_Analysis import DescriptiveAnalysis
 from page.Predictive_Analysis import PredictiveAnalysis
-from page.Myocardial_Infarction import CNN_LSTM, load_model, predict, encoder,MyocardialInfarction
-from streamlit_extras.metric_cards import style_metric_cards
 
 st.set_page_config(layout="wide")
 tab1, tab2, tab3 ,tab4,tab5= st.tabs(["📈 Preprocessing", "🗃 Descriptive Analysis", "📊Arrhythmia Detection","📊Mycardioc Infarction Detection", "📊Person Identification"])
@@ -34,10 +31,12 @@ with tab1:
     with select_col1:
         option = st.selectbox("Select A patient Record", ("100", "101", "102", "103", "104", "105", "106"))
 
-    #
+    with select_col2:
+        channel = st.selectbox("Select A Patient Channel", (0, 1))
+
     data = f"mit-bih-arrhythmia-database-1.0.0/{option}"
     record = wfdb.rdrecord(data, smooth_frames=True)
-    DATA = {"record": record, "channel": 0, "saved_signals": st.session_state.saved_signals}
+    DATA = {"record": record, "channel": channel, "saved_signals": st.session_state.saved_signals}
 
     page = Preprocess(DATA)
     signal = page.content()
@@ -51,7 +50,6 @@ with tab1:
 
 with tab2:
     DATA = {"record": record, "signal": signal,'saved_signals': st.session_state.saved_signals}
-    st.title("ECG Signal Analysis")
     page = DescriptiveAnalysis(DATA)
     page.content()
 
@@ -63,8 +61,8 @@ with tab3:
 
 with tab4:
     DATA = {"record": record, "signal": signal,'saved_signals': st.session_state.saved_signals}
-    page = MyocardialInfarction(DATA)
-    page.content()
+    # page = PredictiveAnalysis(DATA)
+    # page.content()
 
 with tab5:
     DATA = {"record": record, "signal": signal,'saved_signals': st.session_state.saved_signals}

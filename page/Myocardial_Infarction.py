@@ -159,7 +159,7 @@ class MyocardialInfarction(Page):
         super().__init__(name, data, **kwargs)
 
     def content(self):
-        model_path = "D:\Projects\Sem5\ECGAnalysisDashbaord\models\cnn_lstm_model.pth"
+        model_path = "models/cnn_lstm_model.pth"
 
         def load_model(model_path):
             model = CNN_LSTM()
@@ -190,6 +190,7 @@ class MyocardialInfarction(Page):
             output = model(input_data.unsqueeze(1))  
 
         predictions = torch.argmax(output, dim=1).cpu().numpy()[0]
+        print(torch.argmax(output, dim=1).cpu().numpy())
 
         total1, total2, total3 = st.columns(3, gap='small')
         with total2: 

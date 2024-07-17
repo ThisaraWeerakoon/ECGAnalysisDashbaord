@@ -13,18 +13,17 @@ class DescriptiveAnalysis(Page):
 
     def content(self):
         patient_ids= [s["patient_id"] for s in st.session_state.saved_signals]
-        patient_channels = [s["channel"] for s in st.session_state.saved_signals]
-        select_col1, select_col2 = st.columns([0.5, 0.5])
+        # patient_channels = [s["channel"] for s in st.session_state.saved_signals]
+        # select_col1, select_col2 = st.columns([0.5, 0.5])
 
-        with select_col1:
-            option = st.selectbox("Select A patient Record", set(patient_ids))
+        option = st.selectbox("Select A patient Record", set(patient_ids))
 
-        with select_col2:
-            channel = st.selectbox("Select A patient Channel", set(patient_channels))
+        # with select_col2:
+        #     channel = st.selectbox("Select A patient channel", set(patient_channels))
 
         ### get singal from saved signals
         for s in st.session_state.saved_signals:
-            if s["patient_id"] == option and s["channel"] == channel:
+            if s["patient_id"] == option :
                 self.data["signal"] = s["signal"]
                 break
         last_rows = self.data["signal"]
@@ -34,6 +33,9 @@ class DescriptiveAnalysis(Page):
         if last_rows.ndim > 1:
             last_rows = last_rows.flatten()
         signals, info = nk.ecg_process(last_rows, sampling_rate=360)
+        # st.write("ECG Signal Processing Information ")
+        # st.write(info)
+        # print(info)
 
         fig = go.Figure()
         fig.add_trace(go.Scatter(x=np.arange(len(last_rows)), y=last_rows, mode='lines', name='ECG Signal'))
@@ -65,8 +67,8 @@ class DescriptiveAnalysis(Page):
             yaxis=dict(
                 fixedrange=True
             ),
-            width=800,  
-            height=700 
+            width=800,
+            height=700
         )
 
         style_metric_cards(background_color="white", border_left_color="#89CFF0", border_color="#89CFF0",
@@ -78,7 +80,7 @@ class DescriptiveAnalysis(Page):
         with total1:
             if 'ECG_R_Peaks' in info:
                 num_beats = len(info['ECG_R_Peaks'])
-                duration_minutes = len(last_rows) / 360 / 60  
+                duration_minutes = len(last_rows) / 360 / 60
                 heart_rate = num_beats / duration_minutes
                 st.metric(label="Heart Rate (bpm)", value=f"{heart_rate:.2f}")
 
@@ -93,10 +95,10 @@ class DescriptiveAnalysis(Page):
         with total3:
             if 'ECG_R_Peaks' in info:
                 r_peaks = info['ECG_R_Peaks']
-                rr_intervals = np.diff(r_peaks)  
+                rr_intervals = np.diff(r_peaks)
                 rr_std = np.std(rr_intervals)
                 threshold = 0.1
-                if rr_std < threshold:  
+                if rr_std < threshold:
                     rhythm_regularity = "Regular"
                 else:
                     rhythm_regularity = "Irregular"

@@ -23,7 +23,7 @@ class PersonIdentification(Page):
 
     def content(self):
         patient_ids= [s["patient_id"] for s in st.session_state.saved_signals]
-        patient_channels = [s["channel"] for s in st.session_state.saved_signals]
+        # patient_channels = [s["channel"] for s in st.session_state.saved_signals]
 
         st.title('ECG Signal Comparison')
         predict_col1,predict_col2 = st.columns([0.5,0.5])
@@ -33,14 +33,14 @@ class PersonIdentification(Page):
 
             p1_select_col1, p1_select_col2 = st.columns([0.5, 0.5])
 
-            with p1_select_col1:
-                ecg1_patient_id = st.selectbox("Select A patient Record For ECG A", set(patient_ids))
-
-            with p1_select_col2:
-                ecg1_channel = st.selectbox("Select A patient Channel For ECG A", set(patient_channels))
+            # with p1_select_col1:
+            ecg1_patient_id = st.selectbox("Select A patient Record For ECG A", set(patient_ids))
+            #
+            # with p1_select_col2:
+            #     ecg1_channel = st.selectbox("Select A patient Channel For ECG A", set(patient_channels))
             st.subheader('ECG Signal 1')
             ecg_signal_1 = [s["signal"] for s in st.session_state.saved_signals if
-                            s["patient_id"] == ecg1_patient_id and s["channel"] == ecg1_channel]
+                            s["patient_id"] == ecg1_patient_id ]
 
             ## convert to numpy array
             # ecg_signal_1 = ecg_signal_1[0]
@@ -53,17 +53,17 @@ class PersonIdentification(Page):
 
             st.write("Choose the first ECG signal")
 
-            p2_select_col1, p2_select_col2 = st.columns([0.5, 0.5])
+            # p2_select_col1, p2_select_col2 = st.columns([0.5, 0.5])
 
-            with p2_select_col1:
-                ecg2_patient_id = st.selectbox("Select A patient Record  for ECG B", set(patient_ids))
+            # with p2_select_col1:
+            ecg2_patient_id = st.selectbox("Select A patient Record  for ECG B", set(patient_ids))
 
-            with p2_select_col2:
-                ecg2_channel = st.selectbox("Select A patient Channel For ECG B", set(patient_channels))
+            # with p2_select_col2:
+            #     ecg2_channel = st.selectbox("Select A patient Channel For ECG B", set(patient_channels))
 
             st.subheader('ECG Signal 2')
             ecg_signal_2 = [s["signal"] for s in st.session_state.saved_signals if
-                            s["patient_id"] == ecg2_patient_id and s["channel"] == ecg2_channel]
+                            s["patient_id"] == ecg2_patient_id ]
 
             if len(ecg_signal_2) == 0:
                 st.write("No signal found for the selected patient and channel.")

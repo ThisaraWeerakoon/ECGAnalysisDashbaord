@@ -16,6 +16,13 @@ class Preprocess(Page):
         filtered_data = filtfilt(b, a, data)
         return filtered_data
 
+    ## high pass filter
+    def highpass_filter(self,data, cutoff, fs, order=5):
+        nyquist = 0.5 * fs
+        normal_cutoff = cutoff / nyquist
+        b, a = butter(order, normal_cutoff, btype='high', analog=False)
+        filtered_data = filtfilt(b, a, data)
+        return filtered_data
     def lowpass_filter(self,data, cutoff, fs, order=5):
         nyquist = 0.5 * fs
         normal_cutoff = cutoff / nyquist
@@ -61,7 +68,7 @@ class Preprocess(Page):
             filtered_placeholder.line_chart(last_rows)
         with main_col2:
             options = st.multiselect(
-                "Select Processing" , ["Normalization", "Baseline Removal", "LowPassFilter", "Notch Filter"],
+                "Select Processing" , ["Normalization", "Baseline Removal", "LowPassFilter", "Notch Filter" ,"HighPassFilter"],
                 ["Normalization", "Baseline Removal", "LowPassFilter", "Notch Filter"]
             )
             # st.markdown("---")
@@ -75,6 +82,16 @@ class Preprocess(Page):
                 st.write("Frequency band: 0", values)
                 last_rows = self.lowpass_filter(self.data["record"].p_signal[:4096, self.data["channel"]], cutoff=values, fs=360)
 
+            if "HighPassFilter" in options:
+                st.markdown('<p style="font-size:20px;font-weight:bold;">High Pass Filter</p>',
+                            unsafe_allow_html=True)
+                # st.write("Low Pass Filter")
+                high_pass = st.slider(
+                    "Select a band of Frequency Hz ",
+                    100, 1000, 25)
+                st.write("Frequency band: 0", values)
+                last_rows = self.highpass_filter(self.data["record"].p_signal[:4096, self.data["channel"]],
+                                                cutoff=high_pass, fs=360)
 
                 # You can call any Streamlit command, including custom components:
                 # st.bar_chart(np.random.randn(50, 3))

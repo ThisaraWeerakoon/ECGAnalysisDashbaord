@@ -59,6 +59,13 @@ class DescriptiveAnalysis(Page):
         add_peak_trace('ECG_R_Peaks', 'blue', 'R Peaks')
         add_peak_trace('ECG_S_Peaks', 'purple', 'S Peaks')
         add_peak_trace('ECG_T_Peaks', 'orange', 'T Peaks')
+        # Add red grid background
+        for x in np.arange(0, len(last_rows), 50):
+            fig.add_shape(type="line", x0=x, y0=min(last_rows), x1=x, y1=max(last_rows),
+                          line=dict(color="red", width=0.5, dash="dash"))
+        for y in np.arange(min(last_rows), max(last_rows), (max(last_rows) - min(last_rows)) / 10):
+            fig.add_shape(type="line", x0=0, y0=y, x1=len(last_rows), y1=y,
+                          line=dict(color="red", width=0.5, dash="dash"))
 
         fig.update_layout(
             xaxis_title='Sample',
@@ -78,15 +85,15 @@ class DescriptiveAnalysis(Page):
         )
 
         st.plotly_chart(fig, use_container_width=True)
-
-        total1, total2, total3 = st.columns(3, gap='medium')
-
-        with total1:
-            if 'ECG_R_Peaks' in info:
-                num_beats = len(info['ECG_R_Peaks'])
-                duration_minutes = len(last_rows) / 360 / 60
-                heart_rate = num_beats / duration_minutes
-                st.metric(label="Heart Rate (bpm)", value=f"{heart_rate:.2f}")
+        #
+        # total1, total2, total3 = st.columns(3, gap='medium')
+        #
+        # with total1:
+        #     if 'ECG_R_Peaks' in info:
+        #         num_beats = len(info['ECG_R_Peaks'])
+        #         duration_minutes = len(last_rows) / 360 / 60
+        #         heart_rate = num_beats / duration_minutes
+        #         st.metric(label="Heart Rate (bpm)", value=f"{heart_rate:.2f}")
         total1, total2, total3,total4 = st.columns(4 ,gap='medium')
 
         with total2:
@@ -150,14 +157,14 @@ class DescriptiveAnalysis(Page):
             fig_segment.add_annotation(x=(s_peak_coordinates[0][0] + t_peak_coordinates[0][0]) / 2, y=1.1, text="ST Interval", showarrow=False, font=dict(color="black", size=12))
             fig_segment.add_annotation(x=(p_peak_coordinates[0][0] + q_peak_coordinates[0][0]) / 2, y=1.1, text="PQ Interval", showarrow=False, font=dict(color="black", size=12))
             fig_segment.add_annotation(x=(q_peak_coordinates[0][0] + s_peak_coordinates[0][0]) / 2, y=1.1, text="QRS Complex", showarrow=False, font=dict(color="black", size=12))
-            
+
 
             fig_segment.update_layout(
                 width=100,
                 height=500
             )
 
-        
+
             st.plotly_chart(fig_segment, use_container_width=True)
 
         with col2:
@@ -200,6 +207,6 @@ class DescriptiveAnalysis(Page):
                 else:
                     st.warning("Not enough data to calculate ST interval.")
 
-            
+
 
 

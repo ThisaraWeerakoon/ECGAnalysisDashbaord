@@ -4,6 +4,7 @@ import neurokit2 as nk
 import plotly.graph_objects as go
 from utils.page import Page  
 from streamlit_extras.metric_cards import style_metric_cards  
+import random
 
 class ArrhythmiaAnalysis(Page):
     def __init__(self, data, **kwargs):
@@ -26,8 +27,19 @@ class ArrhythmiaAnalysis(Page):
         fig = go.Figure()
         fig.add_trace(go.Scatter(x=list(cleaned_ecg.index), y=cleaned_ecg.to_list(), mode='lines', name='ECG Signal'))
 
+        colors = ['green', 'yellow', 'red','purple']  # Red, Green, Blue with transparency
+        
+
+            
+        # Define the numbers and their corresponding probabilities
+        numbers = [0, 1, 2, 3]
+        weights = [0.7, 0.1, 0.1, 0.1]  # 70% for 0, 10% for 1, 10% for 2, 10% for 3
+
+        random_numbers = random.choices(numbers, weights, k=len(epochs.keys()))
+
+        
         # Add vertical dotted lines
-        for key in epochs.keys():
+        for count,key in enumerate(epochs.keys()):
             fig.add_shape(
                 dict(
                     type='line',
@@ -42,24 +54,34 @@ class ArrhythmiaAnalysis(Page):
                     ),
                 )
             )
-            if int(epochs[key]["Index"].to_list()[-1]) % 2==0:
-                fig.add_trace(go.Scatter(x=epochs[key]["Index"].to_list(), y=epochs[key]["Signal"].to_list(), mode='lines', name='ECG Signal',line=dict(color='red')))
+
+            fig.add_shape(
+                type='rect',
+                x0=epochs[key]["Index"].to_list()[0],
+                x1=epochs[key]["Index"].to_list()[-1],
+                y0=-0.2,
+                y1=0.7,
+                fillcolor=colors[random_numbers[count]],
+                opacity=0.5,
+                layer='below',
+                line_width=0,
+            )
 
         '''
-
-        def add_peak_trace(peak_key, color, name):
-            if peak_key in info and len(info[peak_key]) > 0:
-                valid_indices = [i for i in info[peak_key] if i < len(last_rows)]
-                fig.add_trace(go.Scatter(
-                    x=valid_indices, y=last_rows[valid_indices], mode='markers', marker=dict(color=color),
-                    name=name))
-
-        add_peak_trace('ECG_P_Peaks', 'red', 'P Peaks')
-        add_peak_trace('ECG_Q_Peaks', 'green', 'Q Peaks')
-        add_peak_trace('ECG_R_Peaks', 'blue', 'R Peaks')
-        add_peak_trace('ECG_S_Peaks', 'purple', 'S Peaks')
-        add_peak_trace('ECG_T_Peaks', 'orange', 'T Peaks')
-
+        # Add legend annotations
+        legend_annotations = [
+            dict(
+                x=1.05,
+                y=1.1 - i * 0.1,
+                xref='paper',
+                yref='paper',
+                showarrow=False,
+                text=f'Category {i + 1}',
+                font=dict(color=colors[i]),
+                bgcolor='white',
+                bordercolor=colors[i]
+            ) for i in range(len(colors))
+        ]
         '''
 
 
@@ -78,39 +100,64 @@ class ArrhythmiaAnalysis(Page):
                 fixedrange=True
             ),
             width=800,  
-            height=700 
+            height=700,
+            #annotations=legend_annotations,
+            #showlegend=True  # Add annotations to layout
         )
     
         st.plotly_chart(fig, use_container_width=True)
 
-        total1, total2, total3 = st.columns(3, gap='medium')
+        total1, total2, total3, total4, total5 = st.columns(5, gap='medium')
 
         with total1:
-            if 'ECG_R_Peaks' in info:
-                num_beats = len(info['ECG_R_Peaks'])
-                duration_minutes = len(last_rows) / 360 / 60  
-                heart_rate = num_beats / duration_minutes
-                st.metric(label="Heart Rate (bpm)", value=f"{heart_rate:.2f}")
+            st.metric(label="Total number of beats", value=f"{len(random_numbers)}")
 
         with total2:
-            if num_beats > 1:
-                qrs_intervals = np.diff(info['ECG_R_Peaks'])
-                average_qrs_interval = np.mean(qrs_intervals)
-                st.metric(label="Average QRS Interval (ms)", value=f"{average_qrs_interval:.2f}")
-            else:
-                st.warning("Not enough data to calculate QRS interval.")
+            #st.metric(label="Normal beat count", value=f"{random_numbers.count(0)}")
+
+            st.markdown(
+                f"""
+                <div style="background-color:green; padding:10px; border-radius:5px;">
+                <h3 style="color:white;">N beat count</h3>
+                <p style="color:white; font-size:24px;">{random_numbers.count(0)}</p>
+                </div>
+                """, unsafe_allow_html=True
+            )          
+
 
         with total3:
-            if 'ECG_R_Peaks' in info:
-                r_peaks = info['ECG_R_Peaks']
-                rr_intervals = np.diff(r_peaks)  
-                rr_std = np.std(rr_intervals)
-                threshold = 0.1
-                if rr_std < threshold:  
-                    rhythm_regularity = "Regular"
-                else:
-                    rhythm_regularity = "Irregular"
-                st.metric(label="Rhythm Regularity", value=rhythm_regularity)
+            #st.metric(label="S beat count", value=f"{random_numbers.count(1)}")
+                st.markdown(
+        f"""
+        <div style="background-color:yellow; padding:10px; border-radius:5px;">
+            <h3 style="color:black;">S beat count</h3>
+            <p style="color:black; font-size:24px;">{random_numbers.count(1)}</p>
+        </div>
+        """, unsafe_allow_html=True
+    )
+
+        
+        with total4:
+            #st.metric(label="V beat count", value=f"{random_numbers.count(2)}")
+                st.markdown(
+        f"""
+        <div style="background-color:lightcoral; padding:10px; border-radius:5px;">
+            <h3 style="color:white;">V beat count</h3>
+            <p style="color:white; font-size:24px;">{random_numbers.count(2)}</p>
+        </div>
+        """, unsafe_allow_html=True
+    )
+
+        with total5:
+            #st.metric(label="F beat count", value=f"{random_numbers.count(3)}")
+                st.markdown(
+        f"""
+        <div style="background-color:plum; padding:10px; border-radius:5px;">
+            <h3 style="color:white;">F beat count</h3>
+            <p style="color:white; font-size:24px;">{random_numbers.count(3)}</p>
+        </div>
+        """, unsafe_allow_html=True
+    )
 
 
 

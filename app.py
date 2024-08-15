@@ -6,6 +6,7 @@ import wfdb
 import pandas as pd
 from electroCardioGuard.PersonIdentification import PersonIdentification
 from page.Descriptive_Analysis import DescriptiveAnalysis
+from page.arrythmia_detection import ArrhythmiaAnalysis
 from page.Predictive_Analysis import PredictiveAnalysis
 from page.Myocardial_Infarction import CNN_LSTM, load_model, predict, encoder,MyocardialInfarction
 from streamlit_extras.metric_cards import style_metric_cards
@@ -122,9 +123,10 @@ with tab3:
     if record is None:
         st.error("Please upload a record first.")
     else:
-        DATA = {"record": record, "signal": signal,'saved_signals': st.session_state.saved_signals}
-    # page = PredictiveAnalysis(DATA)
-    # page.content()
+        DATA = {"record": record, "signal": signal, 'saved_signals': st.session_state.saved_signals}
+
+        page = ArrhythmiaAnalysis(DATA)
+        page.content()
 
 with tab4:
     if record is None:

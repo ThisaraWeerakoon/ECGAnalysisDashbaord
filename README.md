@@ -1,5 +1,8 @@
 ﻿# ECGAnalysisDashbaord
 An Web Based interactive ECG Analysis Dashboard 
+
+https://github.com/user-attachments/assets/51d785ff-6520-47c0-b618-c694c23a1f82
+
 - Preproceesing
 - Descriptive Analysis
 - Arythmia Detection
@@ -8,7 +11,7 @@ An Web Based interactive ECG Analysis Dashboard
 
   Made with Streamlit with State of the Art Models
   
- Seják, M., Sido, J., & Žahour, D. (2023). ElectroCardioGuard: Preventing
+1. Seják, M., Sido, J., & Žahour, D. (2023). ElectroCardioGuard: Preventing
 patient misidentification in electrocardiogram databases through neural
 networks. Knowledge-based Systems, 280, 111014.
 https://doi.org/10.1016/j.knosys.2023.111014

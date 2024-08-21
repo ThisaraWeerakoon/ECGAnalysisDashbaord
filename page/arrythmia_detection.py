@@ -21,8 +21,36 @@ class ArrhythmiaAnalysis(Page):
         signals, info = nk.ecg_process(last_rows, sampling_rate=360)
         cleaned_ecg = signals["ECG_Clean"]
         epochs = nk.ecg_segment(cleaned_ecg, rpeaks=None, sampling_rate=250, show=True)
+        #print("Epochs", epochs)
+        
+        '''
         for key in epochs.keys():
-            print(epochs[key]["Index"].to_list()[-1])
+            #print(epochs[key]["Signal"].head(187).values)
+            print(np.array(epochs[key]["Signal"].head(187).values))
+        '''
+
+
+        # Initialize an empty list to store the reshaped signals
+        reshaped_signals = []
+
+        # Iterate through each key in the epochs dictionary
+        for key in epochs.keys():
+            # Extract the first 187 values of the "Signal" column
+            signal = epochs[key]["Signal"].head(187).values
+    
+            # Reshape the signal to (187, 1)
+            reshaped_signal = signal.reshape(187, 1)
+    
+            # Append the reshaped signal to the list
+            reshaped_signals.append(reshaped_signal)
+
+            # Convert the list of reshaped signals to a NumPy array with the shape (len(epochs.keys()), 187, 1)
+            final_array = np.array(reshaped_signals)
+
+        print(final_array.shape)  # Should output (len(epochs.keys()), 187, 1)
+
+        #model
+
 
         fig = go.Figure()
         fig.add_trace(go.Scatter(x=list(cleaned_ecg.index), y=cleaned_ecg.to_list(), mode='lines', name='ECG Signal'))
@@ -36,7 +64,7 @@ class ArrhythmiaAnalysis(Page):
         weights = [0.7, 0.1, 0.1, 0.1]  # 70% for 0, 10% for 1, 10% for 2, 10% for 3
 
         random_numbers = random.choices(numbers, weights, k=len(epochs.keys()))
-
+        print(random_numbers)
         
         # Add vertical dotted lines
         for count,key in enumerate(epochs.keys()):

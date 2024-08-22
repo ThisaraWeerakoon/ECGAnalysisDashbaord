@@ -5,6 +5,13 @@ import plotly.graph_objects as go
 from utils.page import Page  
 from streamlit_extras.metric_cards import style_metric_cards  
 import random
+import pandas as pd
+
+from tensorflow.keras import optimizers, losses, activations, models
+from tensorflow.keras.callbacks import ModelCheckpoint, EarlyStopping, LearningRateScheduler, ReduceLROnPlateau
+from tensorflow.keras.layers import Dense, Input, Dropout, Conv1D, MaxPooling1D, GlobalMaxPooling1D, GlobalAveragePooling1D, concatenate
+
+
 
 class ArrhythmiaAnalysis(Page):
     def __init__(self, data, **kwargs):
@@ -21,7 +28,7 @@ class ArrhythmiaAnalysis(Page):
         signals, info = nk.ecg_process(last_rows, sampling_rate=360)
         cleaned_ecg = signals["ECG_Clean"]
         epochs = nk.ecg_segment(cleaned_ecg, rpeaks=None, sampling_rate=250, show=True)
-        #print("Epochs", epochs)
+        print("Epochs", epochs)
         
         '''
         for key in epochs.keys():
@@ -47,9 +54,48 @@ class ArrhythmiaAnalysis(Page):
             # Convert the list of reshaped signals to a NumPy array with the shape (len(epochs.keys()), 187, 1)
             final_array = np.array(reshaped_signals)
 
-        print(final_array.shape)  # Should output (len(epochs.keys()), 187, 1)
-
+        #print(final_array.shape)  # Should output (len(epochs.keys()), 187, 1)
+        
         #model
+        def get_model():
+            nclass = 5
+            inp = Input(shape=(187, 1))
+            img_1 = Conv1D(16, kernel_size=5, activation=activations.relu, padding="valid")(inp)
+            img_1 = Conv1D(16, kernel_size=5, activation=activations.relu, padding="valid")(img_1)
+            img_1 = MaxPooling1D(pool_size=2)(img_1)
+            img_1 = Dropout(rate=0.1)(img_1)
+            img_1 = Conv1D(32, kernel_size=3, activation=activations.relu, padding="valid")(img_1)
+            img_1 = Conv1D(32, kernel_size=3, activation=activations.relu, padding="valid")(img_1)
+            img_1 = MaxPooling1D(pool_size=2)(img_1)
+            img_1 = Dropout(rate=0.1)(img_1)
+            img_1 = Conv1D(32, kernel_size=3, activation=activations.relu, padding="valid")(img_1)
+            img_1 = Conv1D(32, kernel_size=3, activation=activations.relu, padding="valid")(img_1)
+            img_1 = MaxPooling1D(pool_size=2)(img_1)
+            img_1 = Dropout(rate=0.1)(img_1)
+            img_1 = Conv1D(256, kernel_size=3, activation=activations.relu, padding="valid")(img_1)
+            img_1 = Conv1D(256, kernel_size=3, activation=activations.relu, padding="valid")(img_1)
+            img_1 = GlobalMaxPooling1D()(img_1)
+            img_1 = Dropout(rate=0.2)(img_1)
+
+            dense_1 = Dense(64, activation=activations.relu, name="dense_1")(img_1)
+            dense_1 = Dense(64, activation=activations.relu, name="dense_2")(dense_1)
+            dense_1 = Dense(nclass, activation=activations.softmax, name="dense_3_mitbih")(dense_1)
+
+            model = models.Model(inputs=inp, outputs=dense_1)
+            opt = optimizers.Adam(0.001)
+
+            model.compile(optimizer=opt, loss=losses.sparse_categorical_crossentropy, metrics=['acc'])
+            model.summary()
+            return model
+
+        model = get_model()
+        file_path = "models/baseline_cnn_mitbih.h5"
+        model.load_weights(file_path)
+        #print("final array",final_array)
+        pred_test = model.predict(final_array)
+        pred_test = np.argmax(pred_test, axis=-1)
+        print(pred_test)
+        
 
 
         fig = go.Figure()
@@ -58,13 +104,15 @@ class ArrhythmiaAnalysis(Page):
         colors = ['green', 'yellow', 'red','purple']  # Red, Green, Blue with transparency
         
 
-            
+        '''    
         # Define the numbers and their corresponding probabilities
         numbers = [0, 1, 2, 3]
         weights = [0.7, 0.1, 0.1, 0.1]  # 70% for 0, 10% for 1, 10% for 2, 10% for 3
+        '''
 
-        random_numbers = random.choices(numbers, weights, k=len(epochs.keys()))
-        print(random_numbers)
+        #random_numbers = random.choices(numbers, weights, k=len(epochs.keys()))
+        random_numbers=pred_test.tolist()
+        #print(random_numbers)
         
         # Add vertical dotted lines
         for count,key in enumerate(epochs.keys()):
@@ -135,7 +183,7 @@ class ArrhythmiaAnalysis(Page):
     
         st.plotly_chart(fig, use_container_width=True)
 
-        total1, total2, total3, total4, total5 = st.columns(5, gap='medium')
+        total1, total2, total3, total4, total5,total6 = st.columns(6, gap='medium')
 
         with total1:
             st.metric(label="Total number of beats", value=f"{len(random_numbers)}")
@@ -183,6 +231,16 @@ class ArrhythmiaAnalysis(Page):
         <div style="background-color:plum; padding:10px; border-radius:5px;">
             <h3 style="color:white;">F beat count</h3>
             <p style="color:white; font-size:24px;">{random_numbers.count(3)}</p>
+        </div>
+        """, unsafe_allow_html=True
+    )
+        with total6:
+            #st.metric(label="Q beat count", value=f"{random_numbers.count(4)}")
+                st.markdown(
+        f"""
+        <div style="background-color:red; padding:10px; border-radius:5px;">
+            <h3 style="color:white;">Q beat count</h3>
+            <p style="color:white; font-size:24px;">{random_numbers.count(4)}</p>
         </div>
         """, unsafe_allow_html=True
     )

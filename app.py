@@ -6,7 +6,9 @@ import wfdb
 import pandas as pd
 from electroCardioGuard.PersonIdentification import PersonIdentification
 from page.Descriptive_Analysis import DescriptiveAnalysis
+
 from page.arrythmia_detection import ArrhythmiaAnalysis
+# from page.arrythmia_detection import ArrhythmiaAnalysis
 from page.Predictive_Analysis import PredictiveAnalysis
 from page.Myocardial_Infarction import CNN_LSTM, load_model, predict, encoder,MyocardialInfarction
 from streamlit_extras.metric_cards import style_metric_cards

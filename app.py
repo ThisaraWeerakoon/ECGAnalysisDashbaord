@@ -48,7 +48,7 @@ with tab1:
     """)
 
     # File uploader
-    uploaded_files = st.file_uploader("Choose ECG data files", type=["dat", "hea"], accept_multiple_files=True)
+    uploaded_files = st.file_uploader(label="Choose ECG data files", accept_multiple_files=True)
 
     if uploaded_files:
         for uploaded_file in uploaded_files:

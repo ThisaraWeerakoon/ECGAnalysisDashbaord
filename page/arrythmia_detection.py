@@ -20,7 +20,7 @@ class ArrhythmiaAnalysis(Page):
 
     def content(self):
         patient_ids = [s["patient_id"] for s in st.session_state.saved_signals]
-        option = st.selectbox("Select A patient Record", set(patient_ids))
+        option = st.selectbox("Select A patient Record", set(patient_ids), key="select_patient_record")
 
         for s in st.session_state.saved_signals:
             if s["patient_id"] == option:
